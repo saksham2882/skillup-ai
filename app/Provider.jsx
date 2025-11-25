@@ -4,7 +4,7 @@
 import { UserDetailContext } from "@/context/UserContext"
 import { useUser } from "@clerk/nextjs"
 import axios from "axios"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 const Provider = ({children}) => {
 
