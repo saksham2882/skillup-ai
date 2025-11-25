@@ -1,6 +1,12 @@
+import CourseList from "./_components/CourseList"
+import WelcomeBanner from "./_components/WelcomeBanner"
+
 const Workspace = () => {
   return (
-    <div>Workspace ooo</div>
+    <div>
+        <WelcomeBanner />
+        <CourseList />
+    </div>
   )
 }
 export default Workspace
