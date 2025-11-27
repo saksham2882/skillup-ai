@@ -24,7 +24,6 @@ const PROMPT = `
                "topics": [
                    "string"
                ],
-               "imagePrompt": "string"
             }
           ]
        }
