@@ -16,6 +16,7 @@ const PROMPT = `
           "includeVideo": "boolean",
           "noOfChapters": "number",
           "bannerImagePrompt": "string",
+          "duration": "string",
           "chapters": [
             { 
                "chapterName": "string",
