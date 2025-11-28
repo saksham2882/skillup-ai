@@ -1,14 +1,26 @@
 import { db } from "@/config/db";
 import { coursesTable } from "@/config/schema";
-import { eq } from "drizzle-orm";
+import { currentUser } from "@clerk/nextjs/server";
+import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
     const {searchParams} = new URL(req.url);
-    const courseId = searchParams.get('courseId')
+    const courseId = searchParams?.get('courseId')
+    const user = await currentUser()
 
-    const res = await db.select().from(coursesTable).where(eq(coursesTable.cid, courseId))
-    console.log(res)
+    if(courseId){
+        const res = await db.select().from(coursesTable)
+                    .where(eq(coursesTable.cid, courseId))
+        console.log(res)
+        return NextResponse.json(res[0])
+    }
+    else {
+        const res = await db.select().from(coursesTable)
+                    .where(eq(coursesTable.userEmail, user.primaryEmailAddress?.emailAddress))
+                    .orderBy(desc(coursesTable.id))
+        console.log(res)
+        return NextResponse.json(res)
+    }
 
-    return NextResponse.json(res[0])
 }
