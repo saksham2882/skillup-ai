@@ -34,7 +34,7 @@ const SideBarOptions = [
   {
     title: "My Learning",
     icon: Book,
-    path: "/workspace/my-courses",
+    path: "/workspace/my-learning",
   },
   {
     title: "Explore Courses",
@@ -61,6 +61,13 @@ const SideBarOptions = [
 const AppSidebar = () => {
   const path = usePathname()
 
+  const isActive = (itemPath) => {
+    if (itemPath === "/workspace") {
+      return path === "/workspace";
+    }
+    return path === itemPath || path.startsWith(itemPath + "/");
+  }
+
   return (
     <Sidebar>
       <SidebarHeader className={"p-4"}>
@@ -70,22 +77,31 @@ const AppSidebar = () => {
       <SidebarContent>
         <SidebarGroup>
           <AddNewCourseDialog>
-            <Button className={'cursor-pointer hover:scale-102 active:scale-97 transition-all duration-300'}>Create New Course</Button>
+            <Button
+              className={
+                "cursor-pointer hover:scale-102 active:scale-97 transition-all duration-300"
+              }
+            >
+              Create New Course
+            </Button>
           </AddNewCourseDialog>
         </SidebarGroup>
+
+        <hr />
 
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
               {SideBarOptions.map((item, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton asChild className={"p-5"}>
+                  <SidebarMenuButton asChild className={"p-5 rounded-lg"}>
                     <Link
                       href={item.path}
-                      className={`text-[17px]
+                      className={`text-[17px] flex items-center gap-3 hover:shadow-md
                       ${
-                        path.includes(item.path) &&
-                        "text-muted-foreground bg-purple-100"
+                        isActive(item.path)
+                          ? "bg-purple-200 shadow-md"
+                          : "text-muted-foreground"
                       }`}
                     >
                       <item.icon className="h-7 w-7" />
