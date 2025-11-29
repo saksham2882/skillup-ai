@@ -10,7 +10,12 @@ const EnrollCourseCard = ({ course, enrollCourse }) => {
     // console.log(courseJson)
 
     const CalculateProgress = () => {
-        return (enrollCourse?.completedChapters?.length ?? 0 / course?.courseContent?.length) * 100;
+        const completed = enrollCourse?.completedChapters?.length || 0;
+        const total = course?.courseContent?.length || 0;
+
+        if (total === 0) return 0;
+
+        return Math.round((completed / total) * 100);
     }
 
   return (
