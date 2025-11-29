@@ -22,6 +22,7 @@ import { useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid'
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const AddNewCourseDialog = ({ children }) => {
   const [loading, setLoading] = useState(false)  
@@ -53,7 +54,11 @@ const AddNewCourseDialog = ({ children }) => {
           ...formData,
           courseId: courseId
         });
-        console.log(res.data);
+        
+        if(res?.data?.response == 'Limit Exceed'){
+          router.push('/workspace/billing')
+          toast.warning('Please Subscribe to Plan!')
+        }
         router.push("/workspace/edit-course/" + res?.data?.courseId)
     } catch (error) {
         console.log(error)

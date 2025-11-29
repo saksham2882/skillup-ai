@@ -1,6 +1,6 @@
 import { db } from "@/config/db";
 import { coursesTable } from "@/config/schema";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 import axios from "axios";
 import { NextResponse } from "next/server";
@@ -40,6 +40,10 @@ export async function POST(req) {
     const {courseId, ...formData} = await req.json();
     const user = await currentUser();
 
+    // check for subscription
+    const { has } = await auth()
+    const hasPremiumAccess = has({ plan: 'starter' })
+
 
     const config = {
         responseMimeType: 'text/plain',
@@ -57,6 +61,16 @@ export async function POST(req) {
             ]
         }
     ]
+
+    // If user already created any courses
+    if(!hasPremiumAccess){
+        const res = await db.select().from(coursesTable)
+                    .where(eq(coursesTable.userEmail, user?.primaryEmailAddress.emailAddress))
+
+        if(res?.length >= 1){
+            return NextResponse.json({ response: 'Limit Exceed'})
+        }
+    }
 
     const res = await ai.models.generateContent({
         model,
