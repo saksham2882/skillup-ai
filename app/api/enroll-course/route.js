@@ -4,17 +4,17 @@ import { currentUser } from "@clerk/nextjs/server"
 import { and, desc, eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 
-export async function POST (req) {
+export async function POST(req) {
     const { courseId } = await req.json()
     const user = await currentUser()
 
     // If Course Already Enrolled
     const enrollCourses = await db.select().from(enrollCourseTable)
-                            .where(and(eq(enrollCourseTable.userEmail, user?.primaryEmailAddress.emailAddress),
-                            eq(enrollCourseTable.cid, courseId)
-                        ))  
+        .where(and(eq(enrollCourseTable.userEmail, user?.primaryEmailAddress.emailAddress),
+            eq(enrollCourseTable.cid, courseId)
+        ))
 
-    if(enrollCourses?.length == 0){
+    if (enrollCourses?.length == 0) {
         const res = await db.insert(enrollCourseTable).values({
             cid: courseId,
             userEmail: user.primaryEmailAddress?.emailAddress
@@ -34,15 +34,15 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url)
     const courseId = searchParams?.get('courseId')
 
-    if(courseId){
+    if (courseId) {
         const res = await db.select().from(coursesTable)
             .innerJoin(enrollCourseTable, eq(coursesTable.cid, enrollCourseTable.cid))
             .where(and(eq(enrollCourseTable.userEmail, user?.primaryEmailAddress.emailAddress),
-            eq(enrollCourseTable.cid, courseId)))
+                eq(enrollCourseTable.cid, courseId)))
 
         return NextResponse.json(res[0])
     }
-    else{
+    else {
         const res = await db.select().from(coursesTable)
             .innerJoin(enrollCourseTable, eq(coursesTable.cid, enrollCourseTable.cid))
             .where(eq(enrollCourseTable.userEmail, user?.primaryEmailAddress.emailAddress))
@@ -50,5 +50,19 @@ export async function GET(req) {
 
         return NextResponse.json(res)
     }
-    
+
+}
+
+
+export async function PUT(req) {
+    const { completedChapter, courseId } = await req.json()
+    const user = await currentUser()
+
+    const res = await db.update(enrollCourseTable).set({
+        completedChapters: completedChapter
+    }).where(and(eq(enrollCourseTable.cid, courseId),
+        eq(enrollCourseTable.userEmail, user?.primaryEmailAddress?.emailAddress)))
+        .returning(enrollCourseTable)
+
+    return NextResponse.json(res)
 }

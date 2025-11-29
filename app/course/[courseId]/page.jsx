@@ -24,11 +24,13 @@ const Course = () => {
 
   return (
     <div>
+      <div className="fixed w-full bg-white">
         <AppHeader hideSidebar={true} />
+      </div>
 
         <div className="flex gap-10">
             <ChapterListSidebar courseInfo={courseInfo} /> 
-            <ChapterContent courseInfo={courseInfo} />
+            <ChapterContent courseInfo={courseInfo} refreshData={() => GetEnrolledCourseById()} />
         </div>
     </div>
   )
