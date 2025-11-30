@@ -145,3 +145,56 @@
     --sidebar-ring: oklch(0.439 0 0);
   }
 }
+
+
+@layer components {
+  .btn-base {
+    @apply px-8 py-4 rounded-full font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer;
+  }
+  .btn-primary {
+    @apply bg-linear-to-r from-cyan-500 to-blue-600 text-white shadow-md hover:shadow-cyan-500/40 cursor-pointer;
+  }
+  .btn-secondary {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 cursor-pointer;
+  }
+  .btn-outline {
+    @apply border-2 border-cyan-500 text-cyan-400 hover:bg-cyan-500/10 cursor-pointer;
+  }
+
+  .slide-container {
+    @apply min-h-screen w-full flex items-center justify-center relative overflow-hidden;
+  }
+  .bg-hero {
+    @apply bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-950;
+  }
+  .bg-pricing {
+    @apply bg-[radial-gradient(ellipse_at_bottom,var(--tw-gradient-stops))] from-blue-900 via-slate-900 to-slate-950;
+  }
+  
+  .text-gradient-primary {
+    @apply text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-blue-600;
+  }
+  .text-gradient-white {
+    @apply text-transparent bg-clip-text bg-linear-to-r from-white to-slate-400;
+  }
+
+  .glass-panel {
+    @apply bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl;
+  }
+  .feature-card {
+    @apply h-full p-8 rounded-3xl bg-slate-900 border-2 border-white/5 hover:border-cyan-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-900/50;
+  }
+  .testimonial-card {
+    @apply p-8 rounded-3xl border-2 border-white/5 hover:border-cyan-500/30 backdrop-blur-sm relative transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-900/50;
+  }
+  
+  .nav-bar {
+    @apply fixed top-0 left-0 right-0 z-50 transition-all duration-300 ;
+  }
+  .nav-bar-scrolled {
+    @apply bg-slate-900/80 backdrop-blur-lg py-4 shadow-2xl shadow-cyan-900/40;
+  }
+  .nav-bar-transparent {
+    @apply bg-transparent py-6;
+  }
+}
