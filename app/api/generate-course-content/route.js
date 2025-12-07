@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/config/db";
 import { coursesTable } from "@/config/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { GoogleGenAI } from "@google/genai";
 import { CONTENT_PROMPT } from "@/lib/prompt";
 import { cleanAIResponse, getYoutubeVideo } from "@/lib/utils";
@@ -49,7 +49,7 @@ export async function POST(req) {
                     contents
                 })
 
-                const RawResponse = aiRes?.candidates[0]?.content?.parts[0]?.text
+                const RawResponse = aiRes?.candidates?.[0]?.content?.parts[0]?.text
                 const contentJson = cleanAIResponse(RawResponse)
 
                 // 2. Fetch YouTube Video

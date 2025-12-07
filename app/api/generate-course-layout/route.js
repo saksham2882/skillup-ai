@@ -57,7 +57,7 @@ export async function POST(req) {
             contents
         })
 
-        const RawResponse = res?.candidates[0]?.content?.parts[0]?.text
+        const RawResponse = res?.candidates?.[0]?.content?.parts[0]?.text
         const parsedJson = cleanAIResponse(RawResponse)
 
         if (!parsedJson) {
@@ -90,6 +90,6 @@ export async function POST(req) {
 
     } catch (error) {
         console.error("Generate Layout Error:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: "Failed to generate course layout" }, { status: 500 });
     }
 }
