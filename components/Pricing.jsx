@@ -33,7 +33,7 @@ const Pricing = () => {
                         <AnimatedSection delay={2} className="h-full">
                             <div className="p-8 h-full rounded-3xl bg-slate-900/50 border border-white/10 flex flex-col items-center">
                                 <span className="text-slate-400 font-bold tracking-widest uppercase text-sm mb-4">
-                                    stater
+                                    starter
                                 </span>
                                 <div className="text-4xl font-bold text-white mb-2">Free</div>
                                 <p className="text-slate-400 mb-8 text-center">

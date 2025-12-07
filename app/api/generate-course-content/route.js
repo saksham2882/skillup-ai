@@ -5,16 +5,31 @@ import { eq } from "drizzle-orm";
 import { GoogleGenAI } from "@google/genai";
 import { CONTENT_PROMPT } from "@/lib/prompt";
 import { cleanAIResponse, getYoutubeVideo } from "@/lib/utils";
+import { currentUser } from "@clerk/nextjs/server";
 
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 
 export async function POST(req) {
     try {
+        const user = await currentUser()
+        const email = user?.primaryEmailAddress?.emailAddress
+        if (!email) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const { courseJson, courseId } = await req.json()
 
         if (!courseJson?.chapters) {
             return NextResponse.json({ error: "Invalid Course Data" }, { status: 400 });
+        }
+
+        // Verify course ownership
+        const course = await db.query.coursesTable.findFirst({
+            where: and(eq(coursesTable.cid, courseId), eq(coursesTable.userEmail, email))
+        });
+        if (!course) {
+            return NextResponse.json({ error: "Course not found" }, { status: 404 });
         }
 
         // Process Chapters

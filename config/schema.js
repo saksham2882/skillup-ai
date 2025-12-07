@@ -1,4 +1,5 @@
 import { relations } from "drizzle-orm";
+import { unique } from "drizzle-orm/pg-core";
 import { index } from "drizzle-orm/pg-core";
 import {
     integer,
@@ -93,7 +94,8 @@ export const enrollCourseTable = pgTable("enrollCourse", {
 
 },  (table) => ({
         enrollCidIdx: index("enroll_cid_idx").on(table.cid),
-        enrollUserIdx: index("enroll_user_idx").on(table.userEmail)
+        enrollUserIdx: index("enroll_user_idx").on(table.userEmail),
+        uniqueEnrollment: unique("unique_enrollment").on(table.cid, table.userEmail)
 }));
 
 

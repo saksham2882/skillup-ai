@@ -16,7 +16,7 @@ export async function POST(req) {
         const validation = UserSchema.safeParse(body);
         if (!validation.success) {
             return NextResponse.json(
-                { error: "Invalid Input", details: validation.error },
+                { error: "Invalid Input", details: validation.error.flatten().fieldErrors },
                 { status: 400 }
             );
         }
@@ -45,8 +45,9 @@ export async function POST(req) {
             { status: 201 }
         );
     } catch (error) {
+        console.log("User creation error: ", error)
         return NextResponse.json(
-            { message: "Internal Server Error", error: error.message },
+            { message: "Internal Server Error" },
             { status: 500 }
         );
     }

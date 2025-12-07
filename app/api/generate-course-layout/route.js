@@ -71,7 +71,12 @@ export async function POST(req) {
 
         // 4. save content to database
         await db.insert(coursesTable).values({
-            ...formData,
+            name: formData.name,
+            description: formData.description,
+            noOfChapters: formData.noOfChapters,
+            includeVideo: formData.includeVideo,
+            level: formData.level,
+            category: formData.category,
             courseJson: parsedJson,
             userEmail: email,
             cid: courseId,
@@ -84,6 +89,7 @@ export async function POST(req) {
         return NextResponse.json({ courseId })
 
     } catch (error) {
+        console.error("Generate Layout Error:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

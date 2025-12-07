@@ -10,7 +10,7 @@ export async function POST(req) {
     try {
         const { courseId } = await req.json()
         const user = await currentUser()
-        const email = user?.primaryEmailAddress.emailAddress
+        const email = user?.primaryEmailAddress?.emailAddress
 
         if(!email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -20,7 +20,7 @@ export async function POST(req) {
 
         // 2. Check Enrollment Limit for Free Users
         if(!isPro){
-            const existingEnrollments = await db.select({ count: sql`count(*)` })
+            const existingEnrollments = await db.select({ count: sql`count(*)::int` })
                 .from(enrollCourseTable)
                 .where(eq(enrollCourseTable.userEmail, email))
 
@@ -65,9 +65,9 @@ export async function POST(req) {
 export async function GET(req) {
     try {
         const user = await currentUser()
-        const email = user?.primaryEmailAddress.emailAddress
+        const email = user?.primaryEmailAddress?.emailAddress
 
-        if(!email) return NextResponse.json([], { status: 401 })
+        if(!email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
             
         const { searchParams } = new URL(req.url)
         const courseId = searchParams?.get('courseId')
@@ -127,6 +127,10 @@ export async function PUT(req) {
                 eq(enrollCourseTable.userEmail, email)
             ))
             .returning();
+
+        if (!updated.length) {
+            return NextResponse.json({ error: "Enrollment not found" }, { status: 404 });
+        }
 
         return NextResponse.json(updated[0]);
         
